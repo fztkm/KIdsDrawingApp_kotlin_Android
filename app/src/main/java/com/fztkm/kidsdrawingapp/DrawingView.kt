@@ -3,6 +3,7 @@ package com.fztkm.kidsdrawingapp
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
 
@@ -18,6 +19,8 @@ class DrawingView(context: Context, attrs: AttributeSet): View(context, attrs) {
     private var mBrushSize: Float = 0.toFloat()
     private var color = Color.BLACK
 
+    //Pathを保存するリスト。Path：図形のデータ。指でなぞった形と座標をデータとしてもつ。
+    //mPaths（今まで描いた図形データ）と、現在描いてるPath（mDrawPath）をonDraw()にてcanvasに描画する
     private var mPaths = ArrayList<CustomPath>()
     /**
      * A variable for canvas which will be initialized later and used.
@@ -56,8 +59,19 @@ class DrawingView(context: Context, attrs: AttributeSet): View(context, attrs) {
         mBrushSize = 20.toFloat()
     }
 
+    /**
+     * On size changed
+     * スクリーンが立ち上がった時（起動時や、画面の向き変えたとき）に実行される
+     *
+     * @param w 新しい画面幅
+     * @param h　新しい画面高さ
+     * @param oldw
+     * @param oldh
+     */
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
+        println("ON SIZE CHANGED")
+        //Bitmapの高さと幅、各ビットは色の情報をARGB_8888でもつ;透明度、RGBをそれぞれ8ビットのデータで保持
         mCanvasBitmap = Bitmap.createBitmap(w,h,Bitmap.Config.ARGB_8888)
         canvas = Canvas(mCanvasBitmap!!)
     }
@@ -110,7 +124,7 @@ class DrawingView(context: Context, attrs: AttributeSet): View(context, attrs) {
         val touchY = event?.y
 
         when(event?.action){
-            //触った時
+            //触った瞬間　ACTION_DOWN
             MotionEvent.ACTION_DOWN -> {
                 //CustomPathの設定
                 mDrawPath!!.brushThickness = mBrushSize
@@ -123,6 +137,7 @@ class DrawingView(context: Context, attrs: AttributeSet): View(context, attrs) {
                     }
                 }
             }
+            //なぞっている時 ACTION_MOVE
             MotionEvent.ACTION_MOVE ->{
                 if (touchX != null) {
                     if (touchY != null) {
@@ -130,6 +145,7 @@ class DrawingView(context: Context, attrs: AttributeSet): View(context, attrs) {
                     }
                 }
             }
+            //指を離した時　ACTION_UP
             MotionEvent.ACTION_UP -> {
                 mPaths.add(mDrawPath!!) //Add when to stroke is drawn to canvas and added in the path arraylist
 
@@ -147,6 +163,18 @@ class DrawingView(context: Context, attrs: AttributeSet): View(context, attrs) {
          */
         invalidate()
         return true
+    }
+
+    fun setSizeForBrush(newSize: Float){
+        //画面サイズ(screen dimension)に合わせたBrushSizeにしたい
+        /**返り値　Float
+         * @param unit : Int 単位
+         * @param value : Float 値　unit何個分
+         * @param metrics : DisplayMetrics //Current display metrics to use in the conversion --
+         * supplies display density and scaling information.
+         */
+        mBrushSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, newSize, resources.displayMetrics)
+        mDrawPaint!!.strokeWidth = mBrushSize
     }
 
 
