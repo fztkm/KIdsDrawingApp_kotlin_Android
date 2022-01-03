@@ -4,7 +4,12 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/forth/AndroidStudioProjects/ECtutorials/KidsDrawingApp/app/src/main/res/drawable/background_draw_view_layout.xml" value="0.1" />
+        <entry key="..\:/Users/forth/AndroidStudioProjects/ECtutorials/KidsDrawingApp/app/src/main/res/drawable/ic_brush.xml" value="0.19583333333333333" />
+        <entry key="..\:/Users/forth/AndroidStudioProjects/ECtutorials/KidsDrawingApp/app/src/main/res/drawable/large.xml" value="0.19583333333333333" />
+        <entry key="..\:/Users/forth/AndroidStudioProjects/ECtutorials/KidsDrawingApp/app/src/main/res/drawable/medium.xml" value="0.19583333333333333" />
+        <entry key="..\:/Users/forth/AndroidStudioProjects/ECtutorials/KidsDrawingApp/app/src/main/res/drawable/small.xml" value="0.16666666666666666" />
         <entry key="..\:/Users/forth/AndroidStudioProjects/ECtutorials/KidsDrawingApp/app/src/main/res/layout/activity_main.xml" value="0.18203309692671396" />
+        <entry key="..\:/Users/forth/AndroidStudioProjects/ECtutorials/KidsDrawingApp/app/src/main/res/layout/dialog_bruch_size.xml" value="0.1" />
       </map>
     </option>
   </component>
