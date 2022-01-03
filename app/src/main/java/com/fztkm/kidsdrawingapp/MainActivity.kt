@@ -1,13 +1,17 @@
 package com.fztkm.kidsdrawingapp
 
 import android.app.Dialog
-import android.media.Image
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageButton
+import android.widget.LinearLayout
+import androidx.core.content.ContextCompat
+import androidx.core.view.get
 
 class MainActivity : AppCompatActivity() {
     private var drawingView: DrawingView? = null
+    private var mImageButtonCurrentPaint: ImageButton? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -15,6 +19,14 @@ class MainActivity : AppCompatActivity() {
 
         drawingView = findViewById(R.id.drawingView)
         drawingView?.setSizeForBrush(15.toFloat())
+
+        val linearLayoutColors: LinearLayout = findViewById(R.id.ll_colors)
+        mImageButtonCurrentPaint = linearLayoutColors[1] as ImageButton
+        //ImageButtonのsrcにdrawableをセットする
+        mImageButtonCurrentPaint!!.setImageDrawable(
+            ContextCompat.getDrawable(this, R.drawable.pallet_selected)
+        )
+
         val ibBrushSize: ImageButton = findViewById(R.id.ib_brush_size)
         ibBrushSize.setOnClickListener {
             showChoseBrushSizeDialog()
@@ -24,6 +36,7 @@ class MainActivity : AppCompatActivity() {
     /**
      * Show chose brush size dialog
      * ブラシサイズ選択のダイアログを表示
+     * 大 中 小　30dp 20dp 10dp
      */
     private fun showChoseBrushSizeDialog(){
         val brushDialog = Dialog(this)
@@ -50,5 +63,19 @@ class MainActivity : AppCompatActivity() {
         }
 
         brushDialog.show()
+    }
+
+    fun onPalletClick(view: View){
+        if(view !== mImageButtonCurrentPaint){
+            mImageButtonCurrentPaint!!.setImageDrawable(
+                ContextCompat.getDrawable(this, R.drawable.pallet_normal)
+            )
+            mImageButtonCurrentPaint = view as ImageButton
+            val colorTag = mImageButtonCurrentPaint!!.tag.toString()
+            drawingView!!.setBrushColor(colorTag)
+            mImageButtonCurrentPaint!!.setImageDrawable(
+                ContextCompat.getDrawable(this, R.drawable.pallet_selected)
+            )
+        }
     }
 }
