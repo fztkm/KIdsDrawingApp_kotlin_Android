@@ -31,6 +31,11 @@ class MainActivity : AppCompatActivity() {
         ibBrushSize.setOnClickListener {
             showChoseBrushSizeDialog()
         }
+
+        val ibClearButton: ImageButton = findViewById(R.id.ib_clear)
+        ibClearButton.setOnClickListener {
+            drawingView!!.clearPaths()
+        }
     }
 
     /**
@@ -67,15 +72,20 @@ class MainActivity : AppCompatActivity() {
 
     fun onPalletClick(view: View){
         if(view !== mImageButtonCurrentPaint){
+            val imageButton = view as ImageButton
+            val colorTag = imageButton.tag.toString()
+            drawingView!!.setBrushColor(colorTag)
+
+            //選択状態
+            imageButton.setImageDrawable(
+                ContextCompat.getDrawable(this, R.drawable.pallet_selected)
+            )
+            //非選択状態
             mImageButtonCurrentPaint!!.setImageDrawable(
                 ContextCompat.getDrawable(this, R.drawable.pallet_normal)
             )
-            mImageButtonCurrentPaint = view as ImageButton
-            val colorTag = mImageButtonCurrentPaint!!.tag.toString()
-            drawingView!!.setBrushColor(colorTag)
-            mImageButtonCurrentPaint!!.setImageDrawable(
-                ContextCompat.getDrawable(this, R.drawable.pallet_selected)
-            )
+
+            mImageButtonCurrentPaint = view
         }
     }
 }

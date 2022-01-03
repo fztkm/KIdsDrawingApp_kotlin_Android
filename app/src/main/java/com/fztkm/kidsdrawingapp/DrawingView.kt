@@ -182,6 +182,11 @@ class DrawingView(context: Context, attrs: AttributeSet): View(context, attrs) {
         mDrawPaint!!.color = color
     }
 
+    fun clearPaths(){
+        mPaths.clear()
+        invalidate()
+    }
+
 
     internal inner class CustomPath(var color: Int, var brushThickness: Float) : Path(){
 
