@@ -19,20 +19,23 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         drawingView = findViewById(R.id.drawingView)
-        drawingView?.setSizeForBrush(15.toFloat())
+        drawingView?.setSizeForBrush(10.toFloat())
 
+        //ブラシ色＿黒＿ImageButtonを選択状態にする
         val linearLayoutColors: LinearLayout = findViewById(R.id.ll_colors)
         mImageButtonCurrentPaint = linearLayoutColors[1] as ImageButton
-        //ImageButtonのsrcにdrawableをセットする
+        //ImageButtonのsrcに選択状態のdrawableをセットする
         mImageButtonCurrentPaint!!.setImageDrawable(
             ContextCompat.getDrawable(this, R.drawable.palette_selected)
         )
 
+        //ブラシサイズ変更のクリックリスナー
         val ibBrushSize: ImageButton = findViewById(R.id.ib_brush_size)
         ibBrushSize.setOnClickListener {
             showChoseBrushSizeDialog()
         }
 
+        //描画消去のクリックリスナー
         val ibClearButton: ImageButton = findViewById(R.id.ib_clear)
         ibClearButton.setOnClickListener {
             drawingView!!.clearPaths()
@@ -71,6 +74,12 @@ class MainActivity : AppCompatActivity() {
         brushDialog.show()
     }
 
+    /**
+     * On palette click
+     * 色ボタンを押すと、そのボタンを選択状態にして、ブラシの色をその色にする
+     * @param view
+     * xmlファイルでid/ll_colors内のImageButtonのonClickに渡した
+     */
     fun onPaletteClick(view: View){
         if(view !== mImageButtonCurrentPaint){
             val imageButton = view as ImageButton
@@ -90,6 +99,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * On random color click
+     * 画面下部の真ん中のパレットImageButton(id/ib_color_picker)を押した時に実行
+     * カラーピッカーダイアログを表示（AmbilWarnaDialogライブラリ）
+     * デフォルトカラーは現在のブラシの色
+     * @param view
+     */
     fun onRandomColorClick(view: View){
         when(mImageButtonCurrentPaint!!.id){
             R.id.ib_color_picker -> Unit
@@ -103,14 +119,17 @@ class MainActivity : AppCompatActivity() {
         val colorPickerDialog = AmbilWarnaDialog(
             this, drawingView!!.color, object: AmbilWarnaDialog.OnAmbilWarnaListener{
                 override fun onCancel(dialog: AmbilWarnaDialog?) {
-                    //pass
+                    Unit
                 }
-
                 override fun onOk(dialog: AmbilWarnaDialog?, color: Int) {
                     drawingView!!.setBrushColor(color)
                 }
             }
         )
         colorPickerDialog.show()
+    }
+
+    fun onBackImageButtonClick(view: View){
+        drawingView!!.popPathsList()
     }
 }

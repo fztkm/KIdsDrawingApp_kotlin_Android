@@ -128,9 +128,20 @@
             android:layout_height="50dp"
             android:src="@drawable/ic_clear"
             android:background="@color/white"
-            android:layout_marginRight="50dp"
+            android:layout_marginRight="30dp"
             android:scaleType="fitXY"/>
 
+        <ImageButton
+            android:id="@+id/ib_back"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_baseline_arrow_back_24"
+            android:background="@color/white"
+            android:padding="5dp"
+            android:layout_marginRight="30dp"
+            android:scaleType="fitXY"
+            android:onClick="onBackImageButtonClick"
+            />
 
 
         <ImageButton
@@ -139,7 +150,7 @@
             android:layout_height="50dp"
             android:src="@drawable/ic_palette"
             android:background="@color/white"
-            android:layout_marginRight="50dp"
+            android:layout_marginRight="30dp"
             android:scaleType="fitXY"
             android:onClick="onRandomColorClick"
             />

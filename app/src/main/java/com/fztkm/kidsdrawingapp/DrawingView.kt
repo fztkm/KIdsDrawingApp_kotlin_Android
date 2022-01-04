@@ -204,6 +204,13 @@ class DrawingView(context: Context, attrs: AttributeSet): View(context, attrs) {
         invalidate()
     }
 
+    fun popPathsList(){
+        if(mPaths.isNotEmpty()){
+            mPaths.apply { removeAt(mPaths.size-1) }
+        }
+        invalidate()
+    }
+
 
     internal inner class CustomPath(var color: Int, var brushThickness: Float) : Path(){
 
