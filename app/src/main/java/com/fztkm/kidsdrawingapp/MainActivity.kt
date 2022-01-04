@@ -8,6 +8,7 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.get
+import yuku.ambilwarna.AmbilWarnaDialog
 
 class MainActivity : AppCompatActivity() {
     private var drawingView: DrawingView? = null
@@ -24,7 +25,7 @@ class MainActivity : AppCompatActivity() {
         mImageButtonCurrentPaint = linearLayoutColors[1] as ImageButton
         //ImageButtonのsrcにdrawableをセットする
         mImageButtonCurrentPaint!!.setImageDrawable(
-            ContextCompat.getDrawable(this, R.drawable.pallet_selected)
+            ContextCompat.getDrawable(this, R.drawable.palette_selected)
         )
 
         val ibBrushSize: ImageButton = findViewById(R.id.ib_brush_size)
@@ -70,7 +71,7 @@ class MainActivity : AppCompatActivity() {
         brushDialog.show()
     }
 
-    fun onPalletClick(view: View){
+    fun onPaletteClick(view: View){
         if(view !== mImageButtonCurrentPaint){
             val imageButton = view as ImageButton
             val colorTag = imageButton.tag.toString()
@@ -78,14 +79,38 @@ class MainActivity : AppCompatActivity() {
 
             //選択状態
             imageButton.setImageDrawable(
-                ContextCompat.getDrawable(this, R.drawable.pallet_selected)
+                ContextCompat.getDrawable(this, R.drawable.palette_selected)
             )
             //非選択状態
             mImageButtonCurrentPaint!!.setImageDrawable(
-                ContextCompat.getDrawable(this, R.drawable.pallet_normal)
+                ContextCompat.getDrawable(this, R.drawable.palette_normal)
             )
 
             mImageButtonCurrentPaint = view
         }
+    }
+
+    fun onRandomColorClick(view: View){
+        when(mImageButtonCurrentPaint!!.id){
+            R.id.ib_color_picker -> Unit
+            else -> {
+                mImageButtonCurrentPaint!!.setImageDrawable(
+                    ContextCompat.getDrawable(this, R.drawable.palette_normal)
+                )
+            }
+        }
+
+        val colorPickerDialog = AmbilWarnaDialog(
+            this, drawingView!!.color, object: AmbilWarnaDialog.OnAmbilWarnaListener{
+                override fun onCancel(dialog: AmbilWarnaDialog?) {
+                    //pass
+                }
+
+                override fun onOk(dialog: AmbilWarnaDialog?, color: Int) {
+                    drawingView!!.setBrushColor(color)
+                }
+            }
+        )
+        colorPickerDialog.show()
     }
 }

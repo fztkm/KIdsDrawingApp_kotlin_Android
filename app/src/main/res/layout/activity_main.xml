@@ -31,90 +31,82 @@
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_margin="2dp"
-            android:src="@drawable/pallet_normal"
+            android:src="@drawable/palette_normal"
             android:tag="@color/skin"
-            android:onClick="onPalletClick"
+            android:onClick="onPaletteClick"
             android:background="@color/skin"/>
 
         <ImageButton
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_margin="2dp"
-            android:src="@drawable/pallet_normal"
+            android:src="@drawable/palette_normal"
             android:tag="@color/black"
-            android:onClick="onPalletClick"
+            android:onClick="onPaletteClick"
             android:background="@color/black"/>
 
         <ImageButton
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_margin="2dp"
-            android:src="@drawable/pallet_normal"
+            android:src="@drawable/palette_normal"
             android:tag="@color/red"
-            android:onClick="onPalletClick"
+            android:onClick="onPaletteClick"
             android:background="@color/red"/>
 
         <ImageButton
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_margin="2dp"
-            android:src="@drawable/pallet_normal"
+            android:src="@drawable/palette_normal"
             android:tag="@color/green"
-            android:onClick="onPalletClick"
+            android:onClick="onPaletteClick"
             android:background="@color/green"/>
 
         <ImageButton
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_margin="2dp"
-            android:src="@drawable/pallet_normal"
+            android:src="@drawable/palette_normal"
             android:tag="@color/blue"
-            android:onClick="onPalletClick"
+            android:onClick="onPaletteClick"
             android:background="@color/blue"/>
 
         <ImageButton
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_margin="2dp"
-            android:src="@drawable/pallet_normal"
+            android:src="@drawable/palette_normal"
             android:tag="@color/yellow"
-            android:onClick="onPalletClick"
+            android:onClick="onPaletteClick"
             android:background="@color/yellow"/>
 
         <ImageButton
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_margin="2dp"
-            android:src="@drawable/pallet_normal"
+            android:src="@drawable/palette_normal"
             android:tag="@color/purple"
-            android:onClick="onPalletClick"
+            android:onClick="onPaletteClick"
             android:background="@color/purple"/>
 
         <ImageButton
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_margin="2dp"
-            android:src="@drawable/pallet_normal"
+            android:src="@drawable/palette_normal"
             android:tag="@color/water"
-            android:onClick="onPalletClick"
+            android:onClick="onPaletteClick"
             android:background="@color/water"/>
 
-        <ImageButton
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_margin="2dp"
-            android:src="@drawable/pallet_normal"
-            android:tag="@color/random"
-            android:onClick="onPalletClick"
-            android:background="@color/random"/>
 
         <ImageButton
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_margin="2dp"
-            android:src="@drawable/pallet_normal"
+            android:src="@drawable/palette_normal"
             android:tag="@color/white"
-            android:onClick="onPalletClick"
+            android:onClick="onPaletteClick"
             android:background="@color/white"/>
 
     </LinearLayout>
@@ -129,6 +121,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         >
+
         <ImageButton
             android:id="@+id/ib_clear"
             android:layout_width="50dp"
@@ -139,6 +132,17 @@
             android:scaleType="fitXY"/>
 
 
+
+        <ImageButton
+            android:id="@+id/ib_color_picker"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_palette"
+            android:background="@color/white"
+            android:layout_marginRight="50dp"
+            android:scaleType="fitXY"
+            android:onClick="onRandomColorClick"
+            />
 
         <ImageButton
             android:id="@+id/ib_brush_size"

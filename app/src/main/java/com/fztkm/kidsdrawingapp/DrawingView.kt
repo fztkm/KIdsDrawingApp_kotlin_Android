@@ -17,7 +17,8 @@ class DrawingView(context: Context, attrs: AttributeSet): View(context, attrs) {
     private var mCanvasPaint: Paint? = null// Instance of canvas paint view.
 
     private var mBrushSize: Float = 0.toFloat()
-    private var color = Color.BLACK
+    var color = Color.BLACK
+        private set
 
     //Pathを保存するリスト。Path：図形のデータ。指でなぞった形と座標をデータとしてもつ。
     //mPaths（今まで描いた図形データ）と、現在描いてるPath（mDrawPath）をonDraw()にてcanvasに描画する
@@ -177,11 +178,27 @@ class DrawingView(context: Context, attrs: AttributeSet): View(context, attrs) {
         mDrawPaint!!.strokeWidth = mBrushSize
     }
 
+    /**
+     * Set brush color
+     *
+     * @param newColor: String e.g."#aaff02" カラーコードの文字列
+     * をInt変換してcolorにセット
+     */
     fun setBrushColor(newColor: String){
         color = Color.parseColor(newColor)
         mDrawPaint!!.color = color
     }
 
+    fun setBrushColor(newColor: Int){
+        color = newColor
+        mDrawPaint!!.color = color
+    }
+
+    /**
+     * Clear paths
+     * mPathsをクリア　画面に書かれた絵を全消去する
+     * invalidate()でonDraw()を呼び出す
+     */
     fun clearPaths(){
         mPaths.clear()
         invalidate()
