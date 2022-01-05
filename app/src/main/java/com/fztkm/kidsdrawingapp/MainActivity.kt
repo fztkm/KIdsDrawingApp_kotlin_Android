@@ -1,5 +1,6 @@
 package com.fztkm.kidsdrawingapp
 
+import android.Manifest
 import android.app.AlertDialog
 import android.app.Dialog
 import androidx.appcompat.app.AppCompatActivity
@@ -18,21 +19,31 @@ class MainActivity : AppCompatActivity() {
     private var drawingView: DrawingView? = null
     private var mImageButtonCurrentPaint: ImageButton? = null
 
+    //Manifestの<uses-permission/>に欲しい権限を設定することが必要
+    //権限要求のための変数、権限を要求するタイミングで、requestPermission.launch()する
+    //launchにArrayで要求する権限を渡す。forEachでひとつづつ処理を行う。
     private val requestPermission: ActivityResultLauncher<Array<String>> =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()){
             permissions ->
             permissions.entries.forEach{
                 val permissionName = it.key
                 val isGranted = it.value
-
+                //要求通った
                 if(isGranted){
-                    Toast.makeText(this@MainActivity,
-                        "Permission granted for external storage",
-                        Toast.LENGTH_LONG).show()
+                    //認められたのは外部ストレージ読み取り権限か
+                    if(permissionName == Manifest.permission.READ_EXTERNAL_STORAGE){
+                        Toast.makeText(this@MainActivity,
+                            "Permission granted for external storage",
+                            Toast.LENGTH_LONG).show()
+                    }
+                //拒否
                 }else{
-                    Toast.makeText(this@MainActivity,
-                        "Permission denied for external storage",
-                        Toast.LENGTH_LONG).show()
+                    //拒否されたのは外部ストレージ読み取り権限か
+                    if(permissionName == Manifest.permission.READ_EXTERNAL_STORAGE){
+                        Toast.makeText(this@MainActivity,
+                            "Permission denied for external storage",
+                            Toast.LENGTH_LONG).show()
+                    }
                 }
             }
         }
@@ -62,6 +73,48 @@ class MainActivity : AppCompatActivity() {
         ibClearButton.setOnClickListener {
             drawingView!!.clearPaths()
         }
+
+        val ibGallery: ImageButton = findViewById(R.id.ib_photo)
+        ibGallery.setOnClickListener {
+           requestStoragePermission()
+        }
+    }
+
+    /**
+     * ストレージへのアクセス権限を要求する
+     *　既に拒否されている場合には、権限が必要だが拒否されていることをダイアログで表示
+     */
+    private fun requestStoragePermission(){
+        //すでに権限要求が拒否されている場合 shouldShowRequestPermissionRationaleはtrueを返す
+        // その場合, showRationaleDialogを表示
+        if(shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)){
+            showRationaleDialog("KidsDrawingApp requires external storage access",
+                "External storage cannot be used because storage access is denied")
+        }else{
+            //権限要求をする
+            requestPermission.launch(
+                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
+            )
+        }
+    }
+
+    /**
+     *ダイアログを表示する
+     * 用途：権限が必要であることを表示する
+     * @param title
+     * @param message
+     */
+    private fun showRationaleDialog(
+        title: String,
+        message: String
+    ){
+        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+        builder.setTitle(title)
+            .setMessage(message)
+            .setPositiveButton("Cancel"){
+                    dialog,_ -> dialog.dismiss()
+            }
+        builder.create().show()
     }
 
     /**
@@ -161,16 +214,5 @@ class MainActivity : AppCompatActivity() {
         drawingView!!.popPathsList()
     }
 
-    private fun showRationaleDialog(
-        title: String,
-        message: String
-    ){
-        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
-        builder.setTitle(title)
-            .setMessage(message)
-            .setPositiveButton("Cancel"){
-                dialog,_ -> dialog.dismiss()
-            }
-        builder.create().show()
-    }
+
 }
