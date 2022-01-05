@@ -20,14 +20,41 @@ import yuku.ambilwarna.AmbilWarnaDialog
 
 class MainActivity : AppCompatActivity() {
 
-    private val cameraResultLauncher: ActivityResultLauncher<String> = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()){
-        isGranted ->
-        if(isGranted){
-            Toast.makeText(this, "Permission granted for camera.", Toast.LENGTH_LONG).show()
-        }else{
-            Toast.makeText(this,"Permission denied for camera.", Toast.LENGTH_LONG).show()
+    //カメラと位置情報の権限リクエスト、lounch()で呼び出す
+    private val cameraAndLocationResultLauncher: ActivityResultLauncher<Array<String>> =
+        registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()){
+            permissions ->
+            permissions.entries.forEach{
+                val permissionName = it.key
+                val isGranted = it.value
+                if (isGranted){
+                    //詳細な位置情報の権限が許可
+                    if(permissionName == Manifest.permission.ACCESS_FINE_LOCATION){
+                        Toast.makeText(this,
+                            "Permission granted for location",
+                            Toast.LENGTH_LONG).show()
+                    }else{
+                        //カメラ権限許可
+                        Toast.makeText(this,
+                            "Permission granted for Camera",
+                            Toast.LENGTH_LONG).show()
+                    }
+                }else{
+                    //詳細な位置情報の権限が拒否された
+                    if (permissionName == Manifest.permission.ACCESS_FINE_LOCATION){
+                        Toast.makeText(this,
+                        "Permission denied for location",
+                        Toast.LENGTH_LONG).show()
+                    }else{
+                        //カメラの権限が拒否された
+                        Toast.makeText(this,
+                        "Permission denied for Camera",
+                        Toast.LENGTH_LONG).show()
+                    }
+                }
         }
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,7 +72,13 @@ class MainActivity : AppCompatActivity() {
                 showRationaleDialog("Permision Demo requires camera access",
                 "Camera cannot be used because Camera access is denied")
             }else{
-                cameraResultLauncher.launch(Manifest.permission.CAMERA)
+                //カメラと位置情報の権限の要求をする
+                cameraAndLocationResultLauncher.launch(
+                    arrayOf(Manifest.permission.CAMERA,
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                       )
+                )
             }
         }
     }
