@@ -1,11 +1,15 @@
 package com.fztkm.kidsdrawingapp
 
+import android.app.AlertDialog
 import android.app.Dialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
 import android.widget.LinearLayout
+import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.view.get
 import yuku.ambilwarna.AmbilWarnaDialog
@@ -14,6 +18,24 @@ class MainActivity : AppCompatActivity() {
     private var drawingView: DrawingView? = null
     private var mImageButtonCurrentPaint: ImageButton? = null
 
+    private val requestPermission: ActivityResultLauncher<Array<String>> =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()){
+            permissions ->
+            permissions.entries.forEach{
+                val permissionName = it.key
+                val isGranted = it.value
+
+                if(isGranted){
+                    Toast.makeText(this@MainActivity,
+                        "Permission granted for external storage",
+                        Toast.LENGTH_LONG).show()
+                }else{
+                    Toast.makeText(this@MainActivity,
+                        "Permission denied for external storage",
+                        Toast.LENGTH_LONG).show()
+                }
+            }
+        }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -137,5 +159,18 @@ class MainActivity : AppCompatActivity() {
      */
     fun onBackImageButtonClick(view: View){
         drawingView!!.popPathsList()
+    }
+
+    private fun showRationaleDialog(
+        title: String,
+        message: String
+    ){
+        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+        builder.setTitle(title)
+            .setMessage(message)
+            .setPositiveButton("Cancel"){
+                dialog,_ -> dialog.dismiss()
+            }
+        builder.create().show()
     }
 }
