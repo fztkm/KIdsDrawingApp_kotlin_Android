@@ -204,6 +204,9 @@ class DrawingView(context: Context, attrs: AttributeSet): View(context, attrs) {
         invalidate()
     }
 
+    /**
+     * mPathsの最後の要素を消して再描画する
+     */
     fun popPathsList(){
         if(mPaths.isNotEmpty()){
             mPaths.apply { removeAt(mPaths.size-1) }

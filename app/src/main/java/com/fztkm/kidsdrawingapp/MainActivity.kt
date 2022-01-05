@@ -129,6 +129,12 @@ class MainActivity : AppCompatActivity() {
         colorPickerDialog.show()
     }
 
+    /**
+     * 操作を一つ戻す
+     * ImageButton(id/ib_back)のonClickに渡した
+     * popPathsList() -> mPaths:ArrayList<CustomPath> の最後の要素を消して再描画する
+     * @param view
+     */
     fun onBackImageButtonClick(view: View){
         drawingView!!.popPathsList()
     }
