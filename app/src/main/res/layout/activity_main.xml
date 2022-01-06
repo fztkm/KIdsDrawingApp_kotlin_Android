@@ -19,10 +19,11 @@
         app:layout_constraintTop_toTopOf="parent" >
 
         <ImageView
+            android:id="@+id/iv_background"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_palette"/>
+            />
 
         <com.fztkm.kidsdrawingapp.DrawingView
             android:id="@+id/drawingView"
@@ -188,6 +189,7 @@
             android:id="@+id/ib_photo"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:background="@color/white"
             android:src="@drawable/ic_filter"
             />
     </LinearLayout>

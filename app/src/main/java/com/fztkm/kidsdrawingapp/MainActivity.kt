@@ -3,13 +3,16 @@ package com.fztkm.kidsdrawingapp
 import android.Manifest
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.View
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.view.get
@@ -18,8 +21,10 @@ import com.fztkm.kidsdrawingapp.databinding.DialogBrushSizeBinding
 import yuku.ambilwarna.AmbilWarnaDialog
 
 class MainActivity : AppCompatActivity() {
+
     private var drawingView: DrawingView? = null
     private var mImageButtonCurrentPaint: ImageButton? = null
+
     //Manifestの<uses-permission/>に欲しい権限を設定することが必要
     //権限要求のための変数、権限を要求するタイミングで、requestPermission.launch()する
     //launchにArrayで要求する権限を渡す。forEachでひとつづつ処理を行う。
@@ -36,6 +41,10 @@ class MainActivity : AppCompatActivity() {
                         Toast.makeText(this@MainActivity,
                             "Permission granted for external storage",
                             Toast.LENGTH_LONG).show()
+
+                        val pickIntent = Intent(Intent.ACTION_PICK,
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                        openGalleryLauncher.launch(pickIntent)
                     }
                 //拒否
                 }else{
@@ -49,6 +58,18 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+    //フォトギャラリーを開いて写真を選択し、背景にセットするランチャー
+    //openGalleryLauncher.launch(pickIntent: Intent)で実行される
+    private val openGalleryLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+            result ->
+            if(result.resultCode == RESULT_OK && result.data != null){
+                val ivBackground = binding.ivBackground
+                ivBackground.setImageURI(result.data?.data)
+            }
+        }
+
+    //ViewBinding
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,7 +78,7 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        drawingView = findViewById(R.id.drawingView)
+        drawingView = binding.drawingView
         drawingView?.setSizeForBrush(10.toFloat())
 
         //ブラシ色＿黒＿ImageButtonを選択状態にする
