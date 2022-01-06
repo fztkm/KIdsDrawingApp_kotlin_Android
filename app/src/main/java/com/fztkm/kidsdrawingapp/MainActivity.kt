@@ -13,12 +13,13 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.view.get
+import com.fztkm.kidsdrawingapp.databinding.ActivityMainBinding
+import com.fztkm.kidsdrawingapp.databinding.DialogBrushSizeBinding
 import yuku.ambilwarna.AmbilWarnaDialog
 
 class MainActivity : AppCompatActivity() {
     private var drawingView: DrawingView? = null
     private var mImageButtonCurrentPaint: ImageButton? = null
-
     //Manifestの<uses-permission/>に欲しい権限を設定することが必要
     //権限要求のための変数、権限を要求するタイミングで、requestPermission.launch()する
     //launchにArrayで要求する権限を渡す。forEachでひとつづつ処理を行う。
@@ -47,15 +48,20 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
 
         drawingView = findViewById(R.id.drawingView)
         drawingView?.setSizeForBrush(10.toFloat())
 
         //ブラシ色＿黒＿ImageButtonを選択状態にする
-        val linearLayoutColors: LinearLayout = findViewById(R.id.ll_colors)
+        val linearLayoutColors: LinearLayout = binding.llColors
         mImageButtonCurrentPaint = linearLayoutColors[1] as ImageButton
         //ImageButtonのsrcに選択状態のdrawableをセットする
         mImageButtonCurrentPaint!!.setImageDrawable(
@@ -63,18 +69,18 @@ class MainActivity : AppCompatActivity() {
         )
 
         //ブラシサイズ変更のクリックリスナー
-        val ibBrushSize: ImageButton = findViewById(R.id.ib_brush_size)
+        val ibBrushSize: ImageButton = binding.ibBrushSize
         ibBrushSize.setOnClickListener {
             showChoseBrushSizeDialog()
         }
 
         //描画消去のクリックリスナー
-        val ibClearButton: ImageButton = findViewById(R.id.ib_clear)
+        val ibClearButton: ImageButton = binding.ibClear
         ibClearButton.setOnClickListener {
             drawingView!!.clearPaths()
         }
 
-        val ibGallery: ImageButton = findViewById(R.id.ib_photo)
+        val ibGallery: ImageButton = binding.ibPhoto
         ibGallery.setOnClickListener {
            requestStoragePermission()
         }
@@ -124,23 +130,26 @@ class MainActivity : AppCompatActivity() {
      */
     private fun showChoseBrushSizeDialog(){
         val brushDialog = Dialog(this)
-        brushDialog.setContentView(R.layout.dialog_brush_size)
+        val brushSizeDgBinding: DialogBrushSizeBinding =
+            DialogBrushSizeBinding.inflate(layoutInflater)
+        val dgView = brushSizeDgBinding.root
+        brushDialog.setContentView(dgView)
         brushDialog.setTitle("Brush size: ")
 
         //小さいサイズ
-        val ibSmallBrush: ImageButton = brushDialog.findViewById(R.id.ib_small_brush)
+        val ibSmallBrush: ImageButton = brushSizeDgBinding.ibSmallBrush
         ibSmallBrush.setOnClickListener{
             drawingView!!.setSizeForBrush(10f)
             brushDialog.dismiss()
         }
         //中サイズ
-        val ibMediumBrush: ImageButton = brushDialog.findViewById(R.id.ib_medium_brush)
+        val ibMediumBrush: ImageButton = brushSizeDgBinding.ibMediumBrush
         ibMediumBrush.setOnClickListener {
             drawingView!!.setSizeForBrush(20f)
             brushDialog.dismiss()
         }
         //大きいサイズ
-        val ibLargeBrush: ImageButton = brushDialog.findViewById(R.id.ib_large_brush)
+        val ibLargeBrush: ImageButton = brushSizeDgBinding.ibLargeBrush
         ibLargeBrush.setOnClickListener {
             drawingView!!.setSizeForBrush(30f)
             brushDialog.dismiss()
@@ -213,6 +222,4 @@ class MainActivity : AppCompatActivity() {
     fun onBackImageButtonClick(view: View){
         drawingView!!.popPathsList()
     }
-
-
 }
