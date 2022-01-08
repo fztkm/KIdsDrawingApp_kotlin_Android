@@ -4,10 +4,15 @@ import android.Manifest
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.Toast
@@ -16,9 +21,17 @@ import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.view.get
+import androidx.lifecycle.lifecycleScope
 import com.fztkm.kidsdrawingapp.databinding.ActivityMainBinding
 import com.fztkm.kidsdrawingapp.databinding.DialogBrushSizeBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import yuku.ambilwarna.AmbilWarnaDialog
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
+import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
 
@@ -42,6 +55,7 @@ class MainActivity : AppCompatActivity() {
                             "Permission granted for external storage",
                             Toast.LENGTH_LONG).show()
 
+                        //外部ストレージを開き写真を選択、背景にセット
                         val pickIntent = Intent(Intent.ACTION_PICK,
                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
                         openGalleryLauncher.launch(pickIntent)
@@ -89,21 +103,34 @@ class MainActivity : AppCompatActivity() {
             ContextCompat.getDrawable(this, R.drawable.palette_selected)
         )
 
-        //ブラシサイズ変更のクリックリスナー
+        //ブラシサイズ変更
         val ibBrushSize: ImageButton = binding.ibBrushSize
         ibBrushSize.setOnClickListener {
             showChoseBrushSizeDialog()
         }
 
-        //描画消去のクリックリスナー
+        //描画消去
         val ibClearButton: ImageButton = binding.ibClear
         ibClearButton.setOnClickListener {
             drawingView!!.clearPaths()
         }
 
+        //背景画像を選択
         val ibGallery: ImageButton = binding.ibPhoto
         ibGallery.setOnClickListener {
            requestStoragePermission()
+        }
+
+        //イラストを保存
+        val ibSave: ImageButton = binding.ibSava
+        ibSave.setOnClickListener {
+            if(isReadStorageAllowed()){
+                lifecycleScope.launch {
+                    val flDrawingView: FrameLayout = binding.flDrawingViewContainer
+                    val myBitmap: Bitmap = getBitmapFromView(flDrawingView)
+                    saveBitmapFile(myBitmap)
+                }
+            }
         }
     }
 
@@ -120,7 +147,9 @@ class MainActivity : AppCompatActivity() {
         }else{
             //権限要求をする
             requestPermission.launch(
-                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
+                arrayOf(
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)
             )
         }
     }
@@ -142,6 +171,18 @@ class MainActivity : AppCompatActivity() {
                     dialog,_ -> dialog.dismiss()
             }
         builder.create().show()
+    }
+
+    /**
+     * Is read storage allowed
+     *
+     * @return
+     */
+    private fun isReadStorageAllowed(): Boolean{
+        val result = ContextCompat.checkSelfPermission(this,
+        Manifest.permission.READ_EXTERNAL_STORAGE)
+
+        return result == PackageManager.PERMISSION_GRANTED
     }
 
     /**
@@ -242,5 +283,77 @@ class MainActivity : AppCompatActivity() {
      */
     fun onBackImageButtonClick(view: View){
         drawingView!!.popPathsList()
+    }
+
+    /**
+     * Get bitmap from view
+     *
+     * @param view
+     * @return viewをBitmapに写したもの
+     */
+    private fun getBitmapFromView(view: View): Bitmap{
+        //viewと同じサイズのBitmapを定義する
+        val returnedBitmap =
+            Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
+        //canvasをreturnedBitmapに紐づける
+        val canvas = Canvas(returnedBitmap)
+        val gbDrawable = view.background
+        if(gbDrawable != null){
+            //viewがbackgroundを持つならbackgroundをcanvasに写す
+            gbDrawable.draw(canvas)
+        }else{
+            //backgroundない場合、canvasを白く塗る
+            canvas.drawColor(Color.WHITE)
+        }
+        //viewをcanvasに写す
+        view.draw(canvas)
+
+        return returnedBitmap
+    }
+
+    /**
+     * Save bitmap file
+     * Android/data/com.fztkm.kidsdrawingapp/cache/に保存
+     * キャッシュデータになる
+     * @param bitmap
+     * @return
+     */
+    private suspend fun saveBitmapFile(bitmap: Bitmap?): String{
+        var result = ""
+        withContext(Dispatchers.IO){
+            if(bitmap != null){
+                try {
+                    val bytes = ByteArrayOutputStream()
+                    //bitmapをcompress(圧縮)して、bytesに出力
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 90, bytes)
+
+                    //externalCacheDirはここでは、Android/data/com.fztkm.kidsdrawingapp/cache
+                    val f = File(externalCacheDir?.absoluteFile.toString()
+                    + File.separator + "KidsDrawingApp_" + System.currentTimeMillis()/1000 + ".png")
+
+                    val fo = FileOutputStream(f)
+                    fo.write(bytes.toByteArray())
+                    fo.close()
+
+                    result = f.absolutePath
+
+                    runOnUiThread {
+                        if(result.isNotEmpty()){
+                            Toast.makeText(this@MainActivity,
+                                "File saved successfully :$result",
+                            Toast.LENGTH_LONG).show()
+                        }else{
+                            Toast.makeText(this@MainActivity,
+                            "Something went wrong while saving the file",
+                            Toast.LENGTH_LONG).show()
+                        }
+                    }
+                }catch (e: Exception){
+                    result = ""
+                    e.stackTrace
+                }
+            }
+        }
+        return result
     }
 }

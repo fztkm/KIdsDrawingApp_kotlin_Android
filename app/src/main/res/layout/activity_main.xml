@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+<!--  Drawing area  -->
     <FrameLayout
         android:id="@+id/fl_drawing_view_container"
         android:layout_width="0dp"
@@ -31,10 +32,12 @@
             android:layout_height="match_parent"
             android:background="#80ffffff"
             />
+
     </FrameLayout>
 
+<!-- End: Drawing area-->
 
-
+<!--Start:  Color select Button area  -->
     <LinearLayout
         android:id="@+id/ll_colors"
         android:layout_width="wrap_content"
@@ -141,12 +144,14 @@
         app:layout_constraintBottom_toBottomOf="parent"
         >
 
+<!-- End: Color select Button area-->
 
+<!-- Start: Action Button area -->
         <ImageButton
             android:id="@+id/ib_clear"
             android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/ic_clear"
+            android:layout_height="35dp"
+            android:src="@drawable/ic_delete_forever"
             android:background="@color/white"
             android:layout_marginRight="20dp"
             android:scaleType="fitXY"/>
@@ -155,7 +160,7 @@
             android:id="@+id/ib_back"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@drawable/ic_baseline_arrow_back_24"
+            android:src="@drawable/ic_undo"
             android:background="@color/white"
             android:padding="5dp"
             android:layout_marginRight="20dp"
@@ -191,7 +196,19 @@
             android:layout_height="40dp"
             android:background="@color/white"
             android:src="@drawable/ic_filter"
+            android:layout_marginRight="20dp"
+            android:scaleType="fitXY"
             />
+
+        <ImageButton
+            android:id="@+id/ib_sava"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_save"
+            android:background="@color/white"
+            android:scaleType="fitXY"/>
     </LinearLayout>
+
+<!-- End: Action Button area-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -189,6 +189,7 @@ class DrawingView(context: Context, attrs: AttributeSet): View(context, attrs) {
         mDrawPaint!!.color = color
     }
 
+
     fun setBrushColor(newColor: Int){
         color = newColor
         mDrawPaint!!.color = color
@@ -214,7 +215,7 @@ class DrawingView(context: Context, attrs: AttributeSet): View(context, attrs) {
         invalidate()
     }
 
-
+    //Pathにブラシ色とブラシサイズを拡張する
     internal inner class CustomPath(var color: Int, var brushThickness: Float) : Path(){
 
     }

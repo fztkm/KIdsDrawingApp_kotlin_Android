@@ -10,8 +10,10 @@
         <entry key="..\:/Users/forth/AndroidStudioProjects/ECtutorials/KidsDrawingApp/app/src/main/res/drawable/pallet_normal.xml" value="0.14666666666666667" />
         <entry key="..\:/Users/forth/AndroidStudioProjects/ECtutorials/KidsDrawingApp/app/src/main/res/drawable/pallet_selected.xml" value="0.1" />
         <entry key="..\:/Users/forth/AndroidStudioProjects/ECtutorials/KidsDrawingApp/app/src/main/res/drawable/small.xml" value="0.16666666666666666" />
-        <entry key="..\:/Users/forth/AndroidStudioProjects/ECtutorials/KidsDrawingApp/app/src/main/res/layout/activity_main.xml" value="0.14136125654450263" />
+        <entry key="..\:/Users/forth/AndroidStudioProjects/ECtutorials/KidsDrawingApp/app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="..\:/Users/forth/AndroidStudioProjects/ECtutorials/KidsDrawingApp/app/src/main/res/layout/dialog_bruch_size.xml" value="0.1" />
+        <entry key="..\:/Users/forth/AndroidStudioProjects/ECtutorials/KidsDrawingApp/app/src/main/res/layout/dialog_brush_size.xml" value="0.15989583333333332" />
+        <entry key="..\:/Users/forth/AndroidStudioProjects/ECtutorials/KidsDrawingApp/app/src/main/res/xml/path.xml" value="0.1796875" />
       </map>
     </option>
   </component>
