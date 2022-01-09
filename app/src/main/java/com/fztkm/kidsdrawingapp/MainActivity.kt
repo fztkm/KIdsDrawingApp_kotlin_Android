@@ -24,6 +24,7 @@ import androidx.core.view.get
 import androidx.lifecycle.lifecycleScope
 import com.fztkm.kidsdrawingapp.databinding.ActivityMainBinding
 import com.fztkm.kidsdrawingapp.databinding.DialogBrushSizeBinding
+import com.fztkm.kidsdrawingapp.databinding.DialogShowProgressBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -37,6 +38,8 @@ class MainActivity : AppCompatActivity() {
 
     private var drawingView: DrawingView? = null
     private var mImageButtonCurrentPaint: ImageButton? = null
+    //画像を保存している間に表示するダイアログ
+    private var dialogShowProgress: Dialog? = null
 
     //Manifestの<uses-permission/>に欲しい権限を設定することが必要
     //権限要求のための変数、権限を要求するタイミングで、requestPermission.launch()する
@@ -86,6 +89,11 @@ class MainActivity : AppCompatActivity() {
     //ViewBinding
     private lateinit var binding: ActivityMainBinding
 
+    /**
+     * On create
+     *
+     * @param savedInstanceState
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -126,6 +134,7 @@ class MainActivity : AppCompatActivity() {
         ibSave.setOnClickListener {
             if(isReadStorageAllowed()){
                 lifecycleScope.launch {
+                    showProgressDialog()
                     val flDrawingView: FrameLayout = binding.flDrawingViewContainer
                     val myBitmap: Bitmap = getBitmapFromView(flDrawingView)
                     saveBitmapFile(myBitmap)
@@ -314,7 +323,7 @@ class MainActivity : AppCompatActivity() {
     /**
      * Save bitmap file
      * Android/data/com.fztkm.kidsdrawingapp/cache/に保存
-     * キャッシュデータになる
+     * キャッシュデータにする
      * @param bitmap
      * @return
      */
@@ -347,6 +356,7 @@ class MainActivity : AppCompatActivity() {
                             "Something went wrong while saving the file",
                             Toast.LENGTH_LONG).show()
                         }
+                        dismissProgressDialog()
                     }
                 }catch (e: Exception){
                     result = ""
@@ -355,5 +365,34 @@ class MainActivity : AppCompatActivity() {
             }
         }
         return result
+    }
+
+    /**
+     * Show progress dialog
+     *  Progressダイアログを表示する
+     *  (画像を保存し始めたときに呼び出す)
+     */
+    private fun showProgressDialog(){
+        val progressBinding: DialogShowProgressBinding =
+            DialogShowProgressBinding.inflate(layoutInflater)
+        val view = progressBinding.root
+
+        dialogShowProgress = Dialog(this)
+        dialogShowProgress?.setContentView(view)
+        dialogShowProgress?.show()
+    }
+
+    /**
+     * Dismiss progress dialog
+     * Progressダイアログの表示を消す
+     * （画像の保存が終了したとき呼び出す）
+     */
+    private fun dismissProgressDialog(){
+        //dialogShowProgressがnullでないならdismissして、null代入
+        //表示されている時以外はnullにしておく
+        dialogShowProgress?.let {
+            it.dismiss()
+            dialogShowProgress = null
+        }
     }
 }
