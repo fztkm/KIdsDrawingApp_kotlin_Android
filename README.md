@@ -6,6 +6,10 @@
 - [\<provider\> 公式DOC](https://developer.android.com/guide/topics/manifest/provider-element)
 - [androidx.core.content.FileProvider 公式DOC](https://developer.android.com/reference/androidx/core/content/FileProvider)
 <br>
+
 - [Coroutines Qiita](https://qiita.com/kawmra/items/d024f9ab32ffe0604d39)
 - [Coroutines 公式DOC](https://developer.android.com/kotlin/coroutines?hl=ja)
 - [LifecycleScope](https://developer.android.com/topic/libraries/architecture/coroutines?hl=ja)
+<br>
+
+- [sharingSheet 公式DOC](https://developer.android.com/training/sharing/send?hl=ja)
